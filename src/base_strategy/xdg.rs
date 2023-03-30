@@ -183,6 +183,25 @@ impl super::BaseStrategy for Xdg {
     }
 
     fn runtime_dir(&self) -> Option<PathBuf> {
-        Self::env_var_or_none("XDG_RUNTIME_DIR")
+        let runtime_dir = Self::env_var_or_none("XDG_RUNTIME_DIR")?;
+
+        if cfg!(unix) && cfg!(feature = "runtime_dir_check") {
+            use std::os::unix::prelude::MetadataExt;
+            use std::os::unix::prelude::PermissionsExt;
+
+            let metadata = runtime_dir.metadata().ok()?;
+            if metadata.permissions().mode() == 0o700 {
+                let uid = unsafe { libc::geteuid() };
+                if metadata.uid() == uid {
+                    let gid = unsafe { libc::getegid() };
+                    if metadata.gid() == gid {
+                        return Some(runtime_dir);
+                    }
+                }
+            }
+            None
+        } else {
+            Some(runtime_dir)
+        }
     }
 }
