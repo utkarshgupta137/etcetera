@@ -3,18 +3,17 @@ name = "etcetera"
 version = "0.9.0"
 categories = ["config"]
 documentation = "https://docs.rs/etcetera"
-edition = "2021"
+edition = "2024"
 homepage = "https://github.com/lunacookies/etcetera"
 keywords = ["xdg", "dirs", "directories", "basedir", "path"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/lunacookies/etcetera"
-rust-version = "1.70.0"
+rust-version = "1.85.0"
 description = "An unopinionated library for obtaining configuration, data, cache, & other directories"
 
 [dependencies]
 cfg-if = "1"
-home = ">=0.5,<0.5.11"
 
 # We should keep this in sync with the `home` crate.
 [target.'cfg(windows)'.dependencies]
